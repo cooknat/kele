@@ -1,10 +1,13 @@
 require 'httparty'
 require 'json'
+require './lib/roadmap'
 
 class Kele
   
   include HTTParty
   include JSON
+  include Roadmap
+  
   attr_accessor  :base_uri, :auth_token
     
   def initialize(email, password)
@@ -26,6 +29,5 @@ class Kele
     response = JSON.parse(self.class.get("https://www.bloc.io/api/v1/mentors/#{id}/student_availability", headers: { "authorization" => @auth_token }).body)
     response.select { |slot| slot["booked"] == nil }
   end  
-  
 end    
     
