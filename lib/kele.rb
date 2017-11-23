@@ -29,5 +29,31 @@ class Kele
     response = JSON.parse(self.class.get("https://www.bloc.io/api/v1/mentors/#{id}/student_availability", headers: { "authorization" => @auth_token }).body)
     response.select { |slot| slot["booked"] == nil }
   end  
+  
+  def get_messages(page = nil)
+       if page
+         response = self.class.get('https://www.bloc.io/api/v1/message_threads',
+           headers: { "authorization" => @auth_token },
+           body: { page: page })
+       else
+         response = self.class.get('https://www.bloc.io/api/v1/message_threads',
+           headers: { "authorization" => @auth_token })
+       end
+     JSON.parse(response.body)
+   end
+  
+  def create_message(sender, recipient_id, subject, text)
+    response = self.class.post("https://www.bloc.io/api/v1/messages", 
+        headers: { "authorization" => @auth_token },
+        body: {
+          "sender": sender,
+          "recipient_id": recipient_id,
+          "subject": subject,
+          "stripped-text": text
+        })
+        response.success? 
+        p "message created"
+        p response
+  end  
 end    
     
