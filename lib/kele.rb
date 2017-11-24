@@ -15,6 +15,7 @@ class Kele
     @base_uri = "https://www.bloc.io/api/v1"
     response = self.class.post("https://www.bloc.io/api/v1/sessions", body: {email: email, password: password} )
     @auth_token = response["auth_token"]
+    @enrollment_id = self.get_me["current_enrollment"]["id"]
     
     unless @auth_token
       raise RuntimeError.new("Invalid credentials, please try again.")
@@ -53,6 +54,20 @@ class Kele
         })
         response.success? 
         p "message created"
+  end  
+  
+  def create_submission(checkpoint_id, assignment_branch, assignment_commit_link, comment=nil)
+    response = self.class.post("https://www.bloc.io/api/v1/checkpoint_submissions", 
+        headers: { "authorization" => @auth_token },
+        body: {
+          "checkpoint_id": checkpoint_id,
+          "assignment_branch": assignment_branch,
+          "assignment_commit_link": assignment_commit_link,
+          "comment": comment,
+          "enrollment_id": @enrollment_id
+        })
+        response.success? 
+        p "checkpoint submitted"
   end  
 end    
     
