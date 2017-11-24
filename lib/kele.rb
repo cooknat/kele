@@ -67,7 +67,22 @@ class Kele
           "enrollment_id": @enrollment_id
         })
         response.success? 
-        p "checkpoint submitted"
+        p "checkpoint submitted, submission id #{response["id"]}"
+  end  
+  
+  def update_submission(id, checkpoint_id, assignment_branch, assignment_commit_link, comment=nil)
+    response = self.class.post("https://www.bloc.io/api/v1/checkpoint_submissions", 
+        headers: { "authorization" => @auth_token },
+        body: {
+          "id": id,
+          "checkpoint_id": checkpoint_id,
+          "assignment_branch": assignment_branch,
+          "assignment_commit_link": assignment_commit_link,
+          "comment": comment,
+          "enrollment_id": @enrollment_id
+        })
+        response.success? 
+        p "checkpoint updated"
   end  
 end    
     
