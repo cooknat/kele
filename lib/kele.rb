@@ -53,7 +53,6 @@ class Kele
         })
         response.success? 
         p "message created"
-        p response
   end  
 end    
     
